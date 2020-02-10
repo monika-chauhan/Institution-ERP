@@ -39,20 +39,6 @@ def attendance_detail(request, stud_id, course_id):
     return render(request, 'info/att_detail.html', {'att_list': att_list, 'cr': cr})
 
 
-# def student_search(request, class_id):
-#     field = request.POST['fields']
-#     search = request.POST['search']
-#     class1 = get_object_or_404(Class, id=class_id)
-#     if field == 'USN':
-#         student_list = class1.student_set.filter(USN__icontains=search)
-#     elif field == 'name':
-#         student_list = class1.student_set.filter(name__icontains=search)
-#     else:
-#         student_list = class1.student_set.filter(sex__iexact=search)
-#     return render(request, 'info/class1.html', {'class1': class1, 'student_list': student_list})
-
-
-# Teacher Views
 
 @login_required
 def t_clas(request, teacher_id, choice):
@@ -206,7 +192,6 @@ def t_report(request, assign_id):
 def timetable(request, class_id):
     asst = AssignTime.objects.filter(assign__class_id=class_id)
     matrix = [['' for i in range(12)] for j in range(6)]
-
     for i, d in enumerate(DAYS_OF_WEEK):
         t = 0
         for j in range(12):
@@ -220,7 +205,7 @@ def timetable(request, class_id):
                 matrix[i][j] = a.assign.course_id
             except AssignTime.DoesNotExist:
                 pass
-            t += 1
+            t =+ 1
 
     context = {'matrix': matrix}
     return render(request, 'info/timetable.html', context)

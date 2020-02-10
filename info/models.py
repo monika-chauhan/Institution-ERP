@@ -12,16 +12,17 @@ sex_choice = (
 )
 
 time_slots = (
-    ('7:30 - 8:30', '7:30 - 8:30'),
-    ('8:30 - 9:30', '8:30 - 9:30'),
-    ('9:30 - 10:30', '9:30 - 10:30'),
-    ('11:00 - 11:50', '11:00 - 11:50'),
-    ('11:50 - 12:40', '11:50 - 12:40'),
-    ('12:40 - 1:30', '12:40 - 1:30'),
-    ('2:30 - 3:30', '2:30 - 3:30'),
-    ('3:30 - 4:30', '3:30 - 4:30'),
-    ('4:30 - 5:30', '4:30 - 5:30'),
+    ('9:30 - 10:20','9:30 - 10:20'),
+    ('10:20 - 11:10','10:20 - 11:10'),
+    ('11:25 - 12:15','11:25 - 12:15'),
+    ('12:15 - 1:05','12:15 - 1:05'),
+    ('1:55 - 2:45','1:55 - 2:45'),
+    ('2:45 - 3:35','2:45 - 3:35'),
+    ('3:35 - 4:25','3:35 - 4:25'), 
+    ('3:35 - 4:25','3:35 - 4:25'), 
+   
 )
+
 
 DAYS_OF_WEEK = (
     ('Monday', 'Monday'),
@@ -130,7 +131,7 @@ class Assign(models.Model):
 
 class AssignTime(models.Model):
     assign = models.ForeignKey(Assign, on_delete=models.CASCADE)
-    period = models.CharField(max_length=50, choices=time_slots, default='11:00 - 11:50')
+    period = models.CharField(max_length=50, choices=time_slots, default='11:25 - 12:15')
     day = models.CharField(max_length=15, choices=DAYS_OF_WEEK)
 
 
@@ -144,7 +145,7 @@ class Attendance(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     attendanceclass = models.ForeignKey(AttendanceClass, on_delete=models.CASCADE, default=1)
-    date = models.DateField(default='2018-10-23')
+    date = models.DateField(default='2020-01-21')
     status = models.BooleanField(default='True')
 
     def __str__(self):
@@ -273,8 +274,8 @@ days = {
 
 def create_attendance(sender, instance, **kwargs):
     if kwargs['created']:
-        start_date = date(2018, 8, 1)
-        end_date = date(2018, 11, 30)
+        start_date = date(2020,1,21)
+        end_date = date(2020, 12, 30)
         for single_date in daterange(start_date, end_date):
             if single_date.isoweekday() == days[instance.day]:
                 try:
@@ -330,7 +331,6 @@ def create_marks_class(sender, instance, **kwargs):
 def delete_marks(sender, instance, **kwargs):
     stud_list = instance.class_id.student_set.all()
     StudentCourse.objects.filter(course=instance.course, student__in=stud_list).delete()
-
 
 
 post_save.connect(create_marks, sender=Student)
